@@ -3,7 +3,7 @@ let timer = null;
 function startGame() {
   timer = setInterval(() => {
     postMessage(JSON.stringify({ message: "SHOOT_BULLET", data: null }));
-  }, 100);
+  }, 200);
 }
 
 self.onmessage = function (event) {

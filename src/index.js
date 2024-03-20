@@ -65,7 +65,7 @@ function updateCoordinates(newCoordinates, checkCollision = true) {
     );
   }
   coordinates = newCoordinates;
-  paintScreen();
+  requestAnimationFrame(() => paintScreen());
 }
 
 function steerShip(e) {
@@ -110,7 +110,7 @@ function shootBullet(bulletId) {
   const newCoordinates = copyCoordinates();
   const currentBullet = newCoordinates.bullets[bulletId];
   if (currentBullet) {
-    currentBullet.y -= 5;
+    currentBullet.y -= 6;
     updateCoordinates(newCoordinates);
     if (currentBullet.y >= 0) {
       requestAnimationFrame(() => shootBullet(bulletId));
@@ -161,7 +161,7 @@ function createAndTriggerEnemyShips() {
 
 function detectCollisionAndUpdateCoordinates(newCoordinates) {
   coordinates = newCoordinates;
-  paintScreen();
+  requestAnimationFrame(() => paintScreen());
 }
 
 bulletWorker.onmessage = function (event) {
