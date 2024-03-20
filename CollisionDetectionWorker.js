@@ -3,7 +3,34 @@ const ENEMY_SHIP_HEIGHT = 10;
 
 let prevCollidedObjects;
 
+function shouldSkipDetection(coordinates) {
+  if (!prevCollidedObjects) return false;
+  const [prevBulletId, prevEnemyShipId] = prevCollidedObjects.split("|");
+  if (
+    !coordinates.bullets[prevBulletId] ||
+    !coordinates.enemyShips[prevEnemyShipId]
+  )
+    return false;
+  const { x: prevBulletX, y: prevBulletY } = coordinates.bullets[prevBulletId];
+  const { x: prevEnemyX, y: prevEnemyY } =
+    coordinates.enemyShips[prevEnemyShipId];
+  if (
+    prevBulletX >= prevEnemyX &&
+    prevBulletX <= prevEnemyX + ENEMY_SHIP_WIDTH &&
+    prevBulletY <= prevEnemyY + ENEMY_SHIP_HEIGHT
+  ) {
+    delete coordinates.enemyShips[prevEnemyShipId];
+    delete coordinates.bullets[prevBulletId];
+    return coordinates;
+  }
+  return false;
+}
+
 function detectCollision(coordinates) {
+  const duplicateDetectedCoordinates = shouldSkipDetection(coordinates);
+  if (duplicateDetectedCoordinates) {
+    return;
+  }
   Object.keys(coordinates.bullets).forEach((bulletId) => {
     const { x, y } = coordinates.bullets[bulletId];
     Object.keys(coordinates.enemyShips).forEach((enemyShipId) => {
