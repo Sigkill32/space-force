@@ -1,6 +1,8 @@
 const ENEMY_SHIP_WIDTH = 20;
 const ENEMY_SHIP_HEIGHT = 10;
 
+let prevCollidedObjects;
+
 function detectCollision(coordinates) {
   Object.keys(coordinates.bullets).forEach((bulletId) => {
     const { x, y } = coordinates.bullets[bulletId];
@@ -13,12 +15,16 @@ function detectCollision(coordinates) {
       ) {
         delete coordinates.enemyShips[enemyShipId];
         delete coordinates.bullets[bulletId];
-        postMessage(
-          JSON.stringify({
-            message: "COORDINATES_POST_COLLISION",
-            data: coordinates,
-          })
-        );
+        collidedObjects = [bulletId, enemyShipId].join("|");
+        if (prevCollidedObjects != collidedObjects) {
+          postMessage(
+            JSON.stringify({
+              message: "COORDINATES_POST_COLLISION",
+              data: coordinates,
+            })
+          );
+          prevCollidedObjects = collidedObjects;
+        }
       }
     });
   });

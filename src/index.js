@@ -48,6 +48,12 @@ function paintScreen() {
   renderAllChars(ctx, coordinates);
 }
 
+function updateScore() {
+  const score = document.querySelector(".SpaceImpact_ScoreCard_Score");
+  const updatedScore = parseInt(score.innerHTML) + 1;
+  score.innerHTML = updatedScore;
+}
+
 function copyCoordinates() {
   return JSON.parse(JSON.stringify(coordinates));
 }
@@ -193,6 +199,7 @@ collisionDetectionWorker.onmessage = function (event) {
   const { message, data } = JSON.parse(eventData);
   switch (message) {
     case "COORDINATES_POST_COLLISION":
+      updateScore();
       requestAnimationFrame(() => detectCollisionAndUpdateCoordinates(data));
     default:
       break;
