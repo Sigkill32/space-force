@@ -159,11 +159,6 @@ function createAndTriggerEnemyShips() {
   triggerEnemyShips(newEnemyShip);
 }
 
-function detectCollisionAndUpdateCoordinates(newCoordinates) {
-  coordinates = newCoordinates;
-  requestAnimationFrame(() => paintScreen());
-}
-
 bulletWorker.onmessage = function (event) {
   const { data: eventData } = event;
   const { message, data } = JSON.parse(eventData);
@@ -200,7 +195,7 @@ collisionDetectionWorker.onmessage = function (event) {
   switch (message) {
     case "COORDINATES_POST_COLLISION":
       updateScore();
-      requestAnimationFrame(() => detectCollisionAndUpdateCoordinates(data));
+      updateCoordinates(data);
     default:
       break;
   }
@@ -216,5 +211,3 @@ gameToggle.addEventListener("click", () => {
   enemyWorker.postMessage(JSON.stringify({ message: gameState, data: null }));
   gameToggle.textContent = GAME_STATE_TOGGLE[gameState];
 });
-
-// startGame();
